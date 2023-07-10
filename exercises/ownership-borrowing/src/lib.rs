@@ -3,8 +3,8 @@
 fn exercise1() {
     // Use as many approaches as you can to make it work
     let x = String::from("hello, world");
-    let y = x;
-    let z = x;
+    let y = &x;
+    let z = &x;
 }
 
 // Exercise 2
@@ -17,8 +17,8 @@ fn exercise2() {
     println!("{}", s2);
 }
 // Only modify the code below!
-fn take_ownership(s: String) {
-    println!("{}", s);
+fn take_ownership(s: String)->String {
+    s
 }
 
 // Exercise 3
@@ -37,11 +37,10 @@ fn exercise3() {
 
     println!("{:?}", values_number);
 
-    while additions.len() > 0 {
+    while !additions.len() > 0 {
         let mut addition: f64 = 0.0;
-
         // Sumar valores en additions
-        for element_index in additions {
+        for &element_index in &additions {
             let addition_aux = values[element_index];
             addition = addition_aux + addition;
         }
@@ -50,10 +49,10 @@ fn exercise3() {
 
 // Exercise 4
 // Make it compile
-fn exercise4(value: u32) -> &'static str {
-    let str_value = value.to_string(); // Convert u32 to String
+fn exercise4(value: u32) -> String {
+    let str_value: String = value.to_string(); // Convert u32 to String
     let str_ref: &str = &str_value; // Obtain a reference to the String
-    str_ref // Return the reference to the String
+    str_ref.to_string() // Return the reference to the String
 }
 
 // Exercise 5
@@ -63,12 +62,12 @@ fn exercise5() {
     let mut my_map = HashMap::from([(1, "1.0".to_string()), (2, "2.0".to_string())]);
 
     let key = 3;
-
+    let value: String;
     let res = match my_map.get(&key) {
         Some(child) => child,
         None => {
-            let value = "3.0".to_string();
-            my_map.insert(key, value);
+            value = "3.0".to_string();
+            my_map.insert(key, value.clone());
             &value // HERE IT FAILS
         }
     };
@@ -82,14 +81,14 @@ fn exercise5() {
 use std::io;
 
 fn exercise6() {
-    let mut prev_key: &str = "";
+    let mut prev_key: String = "".to_string();
 
     for line in io::stdin().lines() {
         let s = line.unwrap();
 
         let data: Vec<&str> = s.split("\t").collect();
         if prev_key.len() == 0 {
-            prev_key = data[0];
+            prev_key = data[0].to_string();
         }
     }
 }
@@ -98,8 +97,8 @@ fn exercise6() {
 // Make it compile
 fn exercise7() {
     let mut v: Vec<&str> = Vec::new();
+    let chars = [b'x', b'y', b'z'];
     {
-        let chars = [b'x', b'y', b'z'];
         let s: &str = std::str::from_utf8(&chars).unwrap();
         v.push(&s);
     }
@@ -109,7 +108,7 @@ fn exercise7() {
 // Exercise 8
 // Make it compile
 fn exercise8() {
-    let mut accounting = vec!["Alice", "Ben"];
+    let mut accounting = vec!["Alice".to_string(), "Ben".to_string()];
     
     loop {
         let mut add_input = String::from("");
@@ -125,7 +124,7 @@ fn exercise8() {
             continue;
         }
 
-        let person = add_vec[0];
+        let person = add_vec[0].to_string();
         accounting.push(person);
     }
 }
