@@ -7,19 +7,27 @@ enum MessageOne {
     Write(String),
     ChangeColor(i32, i32, i32),
 }
-fn show_message(msg: MessageOne) {
-    println!("{}", msg);
+
+fn show_message(msg: &MessageOne) {
+    match msg {
+        MessageOne::Quit=> println!("quit"),
+        MessageOne::Move {x,y}=> println!("Move [x: {},  y: {}]", x, y),
+        MessageOne::Write(str)=> println!("Write: {}", str),
+        MessageOne::ChangeColor(r, g, b)=> println!("ChangeColor({},{},{})", r,g, b),
+        _ => println!("Undefine!"),
+    }
+
 }
 
 fn exercise1() {
-    let msgs: __ = [
+    let msgs: [MessageOne;3] = [
         MessageOne::Quit,
         MessageOne::Move { x: 1, y: 3 },
         MessageOne::ChangeColor(255, 255, 0),
     ];
 
     for msg in msgs {
-        show_message(msg)
+        show_message(&msg)
     }
 }
 
@@ -27,14 +35,20 @@ fn exercise1() {
 // Fill in the blank and fix the errors
 // Make it compile
 // Run tests
-enum Message {
-    // TODO: implement the message variant types based on their usage below
-}
-
 struct Point {
     x: u8,
     y: u8,
 }
+enum Message {
+    // TODO: implement the message variant types based on their usage below
+    ChangeColor(u8,u8,u8),
+    Quit,
+    Echo(String),
+    Move(Point),
+
+}
+
+
 
 struct State {
     color: (u8, u8, u8),
@@ -62,6 +76,13 @@ impl State {
     fn process(&mut self, message: Message) {
         // TODO: create a match expression to process the different message variants
         // Remember: When passing a tuple as a function argument, you'll need extra parentheses: fn function((t, u, p, l, e))
+        match message {
+            Message::ChangeColor(r, g, b)=> self.color = (r, g, b ),
+            Message::Move(Point { x, y }) => self.position = Point{x, y},
+            Message::Echo(str)=> println!("{}", str),
+            Message::Quit => self.quit = true,
+            _ => println!(""),
+        }
     }
 }
 
@@ -69,6 +90,7 @@ impl State {
 // Exercise 3
 // Fix the errors
 // Run tests
+#[derive(Debug, PartialEq)]
 enum Direction {
     North,
     East,
@@ -80,6 +102,10 @@ impl Direction {
     fn opposite(&self) -> Direction {
         match self {
             //TODO
+            Direction::East => Direction::West,
+            Direction::West => Direction::East,
+            Direction::South => Direction::North,
+            Direction::North => Direction::South,
         }
     }
 }
@@ -96,10 +122,15 @@ enum Operation {
     Divide,
 }
 
+
 // Perform arithmetic operations
 fn perform_operation(operation: Operation, num1: f64, num2: f64) -> f64 {
     match operation {
         // TODO
+        Operation::Add => num1+num2,
+        Operation::Subtract => num1-num2,
+        Operation::Multiply => num1*num2,
+        Operation::Divide => num1/num2,
     }
 }
 

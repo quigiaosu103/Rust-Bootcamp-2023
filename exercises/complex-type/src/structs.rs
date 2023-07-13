@@ -2,6 +2,7 @@
 // Fix the error
 // Make it compile
 // Run test
+#[derive(Debug, PartialEq)]
 struct Person {
     name: String,
     age: u8,
@@ -39,12 +40,12 @@ impl Agent {
 
     // Get the name of the person
     fn get_name(&self) -> &str {
-        todo!()
+        &self.name
     }
 
     // Get the age of the person
     fn get_age(&self) -> u32 {
-        todo!()
+        self.age
     }
 }
 
@@ -61,18 +62,18 @@ impl Calculator {
         Calculator { value: 0 }
     }
 
-    fn add(&self, num: i32) {
+    fn add(&mut self, num: i32) {
         self.value += num;
     }
 
-    fn subtract(mut self, num: i32) {
+    fn subtract(&mut self, num: i32) {
         self.value -= num;
     }
-    fn clear(self) {
+    fn clear(&mut self) {
         self.value = 0;
     }
 
-    fn get_value(self) -> i32 {
+    fn get_value(&self) -> i32 {
         self.value
     }
 }
@@ -87,7 +88,7 @@ struct User {
 }
 
 fn exercise4() {
-    let u1 = User {
+    let mut u1 = User {
         first: String::from("John"),
         last: String::from("Doe"),
         age: 22,
@@ -96,10 +97,14 @@ fn exercise4() {
     let u2 = User {
         first: String::from("Mary"),
         ..u1
-        
     };
-
+     
+     u1 = User {
+        first: String::from("john"),
+        ..u2
+     };
     println!("user: {:#?}", u1);
+    
 
 }
 
@@ -122,10 +127,9 @@ fn exercise5() {
     });
 
     
-    let moved = foos[0];
+    let moved = &foos[0];
 
-    
-    let moved_field = foos[0].str_val;
+    let moved_field = &foos[0].str_val;
 }
 
 // Exercise 6
@@ -153,12 +157,18 @@ impl Package {
         }
     }
 
-    fn is_international(&self) -> ??? {
+    fn is_international(&self) -> bool {
         // Something goes here...
+        if self.sender_country == self.recipient_country {
+            return false;
+        }
+        true
     }
 
-    fn get_fees(&self, cents_per_gram: i32) -> ??? {
+    fn get_fees(&self, cents_per_gram: i32) -> i32 {
         // Something goes here...
+        cents_per_gram*self.weight_in_grams
+        
     }
 }
 
@@ -198,8 +208,8 @@ mod tests {
     fn exercise3_should_work() {
         let mut calculator = Calculator::new();
         calculator.add(5);
+        
         assert_eq!(calculator.get_value(), 5);
-
         calculator.subtract(2);
         assert_eq!(calculator.get_value(), 3);
 
